@@ -22,16 +22,11 @@ jobs:
         pull-requests: write
 
     steps:
-    - uses: actions/checkout@v2
-
-    - name: 'Print manual run reason'
-      if: ${{ github.event_name == 'workflow_dispatch' }}
-      run: |
-        echo 'Reason: ${{ github.event.inputs.reason }}'
-
+    - uses: actions/checkout@master
+ 
     - name: dotnet-json-extractorcs
       id: dotnet-json-extractorcs
-      uses: /chrisfactory/GithubActions@master
+      uses: /chrisfactory/GithubActions@master/JsonFileExtractor.GitHubAction
       with:
         path: .github\workflows\parameters\example.json
         parameters: "contentVersion;parameters.registryName"  

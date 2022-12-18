@@ -21,3 +21,5 @@ runs:
   - ${{ inputs.path }}
   - '-v'
   - ${{ inputs.properties }} 
+  - '-a'
+  - ${{ inputs.propertyAlias }} 

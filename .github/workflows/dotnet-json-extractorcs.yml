@@ -31,7 +31,7 @@ jobs:
 
     - name: dotnet-json-extractorcs
       id: dotnet-json-extractorcs
-      uses: GithubActions/JsonFileExtractor.GitHubAction@master
+      uses: /chrisfactory/GithubActions@master
       with:
         path: .github\workflows\parameters\example.json
         parameters: "contentVersion;parameters.registryName"  

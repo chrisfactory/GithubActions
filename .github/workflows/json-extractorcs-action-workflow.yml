@@ -8,7 +8,12 @@ on:
     paths:
     - 'JsonFileExtractor.GitHubAction/**'               # run on all changes to this dir
     - '!JsonFileExtractor.GitHubAction/*.md' # ignore this file
-
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'The reason for running the workflow'
+        required: true
+        default: 'Manual run'
 jobs:
   build:
 

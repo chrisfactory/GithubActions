@@ -2,7 +2,10 @@ name: 'json extractorcs'
 
 on:
   push:
-    branches: [ master ]
+    branches:
+      - master
+
+
     paths:
     - 'JsonFileExtractor.GitHubAction/**'               # run on all changes to this dir
     - '!JsonFileExtractor.GitHubAction/*.md' # ignore this file

@@ -28,10 +28,8 @@ jobs:
       with:
         path: .github/workflows/parameters/example.json
         properties: 'contentVersion;parameters.registryName'
-        
-    - name: Show properties 
-      run: echo ${{ steps.dotnet-json-extractorcs.outputs.json-values }}
-    - run: echo ${{ steps.dotnet-json-extractorcs.outputs.json-values.contentVersion }}
-    - run: echo ${{ steps.dotnet-json-extractorcs.outputs.json-values }}.contentVersion  
-    - run: echo ${{ steps.dotnet-json-extractorcs.outputs.json-values }}["contentVersion"]
-    - run: echo ${{ steps.dotnet-json-extractorcs.outputs.json-values }}['contentVersion']
+         
+    - run: echo ${{ steps.dotnet-json-extractorcs.outputs.json-values }}
+    - run: echo ${{ steps.dotnet-json-extractorcs.outputs.json-values.contentVersion }} 
+    - run: echo ${{ steps.dotnet-json-extractorcs.outputs.json-values["contentVersion"] }}
+    - run: echo ${{ steps.dotnet-json-extractorcs.outputs.json-values['contentVersion'] }}

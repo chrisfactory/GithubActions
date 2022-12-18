@@ -34,14 +34,14 @@ static async Task StartAnalysisAsync(ActionInputs inputs, IHost host)
             using (var textWriter = new StreamWriter(githubOutputFile!, true, Encoding.UTF8))
             { 
                 foreach (var kv in result)
-                    textWriter.WriteLine($"json-values.{kv.Key.Replace('.','-')}={kv.Value}");
+                    textWriter.WriteLine($"{kv.Key}={kv.Value}");
             }
 
         }
         else
         { 
             foreach (var kv in result)
-                Console.WriteLine($"::set-output name=json-values.{kv.Key.Replace('.', '-')}::{kv.Value}");
+                Console.WriteLine($"::set-output name={kv.Key}::{kv.Value}");
         }
 
 

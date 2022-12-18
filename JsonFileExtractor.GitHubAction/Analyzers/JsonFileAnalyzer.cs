@@ -43,54 +43,55 @@ sealed class JsonFileAnalyzer
              
                 if (data != null)
                 {
-                    foreach (var property in properties.Split(';'))
+                    foreach (string property in properties.Split(';', StringSplitOptions.RemoveEmptyEntries))
                     {
                         var prop = data.SelectToken(property);
+                        var formatedProperty = $"json-values-{property.Replace('.', '-')}";
                         if (prop != null)
                         {
                             switch (prop.Type)
                             {
                                 case JTokenType.None:
-                                    result.Add(property, prop);
+                                    result.Add(formatedProperty, prop);
                                     break;
                                 case JTokenType.Object:
-                                    result.Add(property, JsonConvert.SerializeObject(prop.ToObject<object>(), Formatting.None));
+                                    result.Add(formatedProperty, JsonConvert.SerializeObject(prop.ToObject<object>(), Formatting.None));
                                     break;
                                 case JTokenType.Array:
-                                    result.Add(property, JsonConvert.SerializeObject(prop.ToObject<Array>(), Formatting.None));
+                                    result.Add(formatedProperty, JsonConvert.SerializeObject(prop.ToObject<Array>(), Formatting.None));
                                     break;
                                 case JTokenType.Integer:
-                                    result.Add(property, prop.ToObject<int>());
+                                    result.Add(formatedProperty, prop.ToObject<int>());
                                     break;
                                 case JTokenType.Float:
-                                    result.Add(property, prop.ToObject<float>());
+                                    result.Add(formatedProperty, prop.ToObject<float>());
                                     break;
                                 case JTokenType.String: 
-                                    result.Add(property, prop.ToObject<string>());
+                                    result.Add(formatedProperty, prop.ToObject<string>());
                                     break;
                                 case JTokenType.Boolean:
-                                    result.Add(property, prop.ToObject<bool>());
+                                    result.Add(formatedProperty, prop.ToObject<bool>());
                                     break;
                                 case JTokenType.Null:
-                                    result.Add(property, null);
+                                    result.Add(formatedProperty, null);
                                     break; 
                                 case JTokenType.Date:
-                                    result.Add(property, prop.ToObject<DateTime>());
+                                    result.Add(formatedProperty, prop.ToObject<DateTime>());
                                     break;
                                 case JTokenType.Raw:
-                                    result.Add(property, prop);
+                                    result.Add(formatedProperty, prop);
                                     break;
                                 case JTokenType.Bytes:
-                                    result.Add(property, prop.ToObject<byte[]>());
+                                    result.Add(formatedProperty, prop.ToObject<byte[]>());
                                     break;
                                 case JTokenType.Guid:
-                                    result.Add(property, prop.ToObject<Guid>());
+                                    result.Add(formatedProperty, prop.ToObject<Guid>());
                                     break;
                                 case JTokenType.Uri:
-                                    result.Add(property, prop.ToObject<Uri>());
+                                    result.Add(formatedProperty, prop.ToObject<Uri>());
                                     break;
                                 case JTokenType.TimeSpan:
-                                    result.Add(property, prop.ToObject<TimeSpan>());
+                                    result.Add(formatedProperty, prop.ToObject<TimeSpan>());
                                     break;
 
                                 case JTokenType.Undefined:
@@ -105,8 +106,8 @@ sealed class JsonFileAnalyzer
                         }
                         else
                         {
-                            result.Add(property, null);
-                            _logger.LogWarning($"{path}: the property {property} not found.");
+                            result.Add(formatedProperty, null);
+                            _logger.LogWarning($"{path}: the property {formatedProperty} not found.");
                         }
                     }
 
@@ -128,6 +129,9 @@ sealed class JsonFileAnalyzer
             _logger.LogWarning($"{path} the file is empty");
         }
 
+
+        foreach (var item in result)
+            _logger.LogInformation($"add property: {item.Key}={item.Value}");
         return Task.FromResult((IReadOnlyDictionary<string, object?>?)result);
     }
 }

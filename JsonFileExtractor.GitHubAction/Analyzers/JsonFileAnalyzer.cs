@@ -15,7 +15,7 @@ sealed class JsonFileAnalyzer
 
     public JsonFileAnalyzer(ILogger<JsonFileAnalyzer> logger) => _logger = logger;
 
-    internal Task<IReadOnlyDictionary<string, object?>?> AnalyzeAsunc(string path, string properties, string? propertiesAlias, CancellationToken cancellation)
+    internal Task<IReadOnlyDictionary<string, object?>?> AnalyzeAsunc(string path, string properties, string? propertyAlias, CancellationToken cancellation)
     {
         cancellation.ThrowIfCancellationRequested();
 
@@ -28,9 +28,9 @@ sealed class JsonFileAnalyzer
         }
 
         var alias = new Dictionary<string, string>();
-        if (!string.IsNullOrEmpty(propertiesAlias))
+        if (!string.IsNullOrEmpty(propertyAlias))
         {
-            foreach (var pMap in propertiesAlias.Split(';', StringSplitOptions.RemoveEmptyEntries))
+            foreach (var pMap in propertyAlias.Split(';', StringSplitOptions.RemoveEmptyEntries))
             {
                 var map = pMap.Split(':', StringSplitOptions.RemoveEmptyEntries);
                 if (map == null || map.Length != 2)
@@ -45,6 +45,7 @@ sealed class JsonFileAnalyzer
             return Task.FromResult(default(IReadOnlyDictionary<string, object?>));
 
         _logger.LogInformation($"Properties: {properties}");
+        _logger.LogInformation($"PropertyAlias: {propertyAlias}");
         string jsonData = File.ReadAllText(path);
         if (jsonData != null && !string.IsNullOrEmpty(jsonData))
         {

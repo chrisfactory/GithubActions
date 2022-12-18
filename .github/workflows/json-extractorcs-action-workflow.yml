@@ -31,5 +31,5 @@ jobs:
          
     - run: echo ${{ steps.dotnet-json-extractorcs.outputs.json-values }}
     - run: echo ${{ steps.dotnet-json-extractorcs.outputs.json-values.contentVersion }} 
-    - run: echo ${{ steps.dotnet-json-extractorcs.outputs.json-values["contentVersion"] }}
+    #- run: echo ${{ steps.dotnet-json-extractorcs.outputs.json-values["contentVersion"] }}
     - run: echo ${{ steps.dotnet-json-extractorcs.outputs.json-values['contentVersion'] }}

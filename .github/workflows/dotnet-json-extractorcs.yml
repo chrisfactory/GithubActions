@@ -4,8 +4,8 @@ on:
   push:
     branches: [ master ]
     paths:
-    - 'github-actions/JsonFileExtractor.GitHubAction/**'               # run on all changes to this dir
-    - '!github-actions/JsonFileExtractor.GitHubAction/CODE_METRICS.md' # ignore this file
+    - 'JsonFileExtractor.GitHubAction/JsonFileExtractor.GitHubAction/**'               # run on all changes to this dir
+    - '!JsonFileExtractor.GitHubAction/JsonFileExtractor.GitHubAction/*.md' # ignore this file
   workflow_dispatch:
     inputs:
       reason:
@@ -31,7 +31,7 @@ jobs:
 
     - name: dotnet-json-extractorcs
       id: dotnet-json-extractorcs
-      uses: JsonFileExtractor.GitHubAction@master 
+      uses: JsonFileExtractor.GitHubAction@master/JsonFileExtractor.GitHubAction
       with:
         path: .github\workflows\parameters\example.json
         parameters: "contentVersion;parameters.registryName"  

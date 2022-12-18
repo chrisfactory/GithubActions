@@ -10,9 +10,9 @@ inputs:
   properties:
     description: 'The JSON properties to extract.'
     required: true 
-outputs:
-  json-values:
-    description: 'A dictionary'
+  propertiesAlias:
+    description: 'Property Alias to changed output property name. exmaple: myproperty.subproperty:myalias;autherpro:autheralias'
+    required: false 
 runs:
   using: 'docker'
   image: 'Dockerfile'

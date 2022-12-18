@@ -1,11 +1,11 @@
-﻿ 
+﻿
 using System;
 using System.Collections.Immutable;
 using System.Reflection;
 //using System.Text.Json;
 //using System.Xml.Linq;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq; 
+using Newtonsoft.Json.Linq;
 
 namespace JsonFileExtractor.GitHubAction.Analyzers;
 
@@ -15,7 +15,7 @@ sealed class JsonFileAnalyzer
 
     public JsonFileAnalyzer(ILogger<JsonFileAnalyzer> logger) => _logger = logger;
 
-    internal Task<IReadOnlyDictionary<string, object?>?> AnalyzeAsunc(string path, string properties, CancellationToken cancellation)
+    internal Task<IReadOnlyDictionary<string, object?>?> AnalyzeAsunc(string path, string properties, string propertiesAlias, CancellationToken cancellation)
     {
         cancellation.ThrowIfCancellationRequested();
 
@@ -27,8 +27,21 @@ sealed class JsonFileAnalyzer
             return Task.FromResult(default(IReadOnlyDictionary<string, object?>));
         }
 
+        var alias = new Dictionary<string, string>();
+        if (!string.IsNullOrEmpty(propertiesAlias))
+        {
+            foreach (var pMap in propertiesAlias.Split(';', StringSplitOptions.RemoveEmptyEntries))
+            {
+                var map = pMap.Split(':', StringSplitOptions.RemoveEmptyEntries);
+                if (map == null || map.Length != 2)
+                    _logger.LogWarning($"{pMap}: the property alias not mapped.");
+                else
+                    alias.Add(map[0], map[1]);
+
+            }
+        }
         var result = new Dictionary<string, object?>();
-        if(string .IsNullOrWhiteSpace(properties))
+        if (string.IsNullOrWhiteSpace(properties))
             return Task.FromResult(default(IReadOnlyDictionary<string, object?>));
 
         _logger.LogInformation($"Properties: {properties}");
@@ -39,14 +52,18 @@ sealed class JsonFileAnalyzer
             {
                 var settings = new JsonSerializerSettings { Formatting = Formatting.None };
                 var data = JsonConvert.DeserializeObject<JObject>(jsonData, settings);
-             
-             
+
+
                 if (data != null)
                 {
                     foreach (string property in properties.Split(';', StringSplitOptions.RemoveEmptyEntries))
                     {
+                        string formatedProperty;
                         var prop = data.SelectToken(property);
-                        var formatedProperty = $"json-values-{property.Replace('.', '-')}";
+                        if (alias.ContainsKey(property))
+                            formatedProperty = alias[property];
+                        else
+                            formatedProperty = $"{property.Replace('.', '-')}";
                         if (prop != null)
                         {
                             switch (prop.Type)
@@ -66,7 +83,7 @@ sealed class JsonFileAnalyzer
                                 case JTokenType.Float:
                                     result.Add(formatedProperty, prop.ToObject<float>());
                                     break;
-                                case JTokenType.String: 
+                                case JTokenType.String:
                                     result.Add(formatedProperty, prop.ToObject<string>());
                                     break;
                                 case JTokenType.Boolean:
@@ -74,7 +91,7 @@ sealed class JsonFileAnalyzer
                                     break;
                                 case JTokenType.Null:
                                     result.Add(formatedProperty, null);
-                                    break; 
+                                    break;
                                 case JTokenType.Date:
                                     result.Add(formatedProperty, prop.ToObject<DateTime>());
                                     break;
@@ -100,9 +117,9 @@ sealed class JsonFileAnalyzer
                                 case JTokenType.Comment:
                                 default:
                                     throw new InvalidOperationException(prop.Type.ToString());
-                                  
+
                             }
-                            
+
                         }
                         else
                         {

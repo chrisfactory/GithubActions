@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.IO;
+using System.Text;
 using System.Text.Json;
 
 using IHost host = Host.CreateDefaultBuilder(args)
@@ -22,18 +23,30 @@ static async Task StartAnalysisAsync(ActionInputs inputs, IHost host)
     var analyser = Get<JsonFileAnalyzer>(host);
 
     var result = await analyser.AnalyzeAsunc(inputs.JSonFilePath, inputs.Properties, tokenSource.Token);
-    var dataResult = JsonSerializer.Serialize(result);
-    // https://docs.github.com/actions/reference/workflow-commands-for-github-actions#setting-an-output-parameter
-    // ::set-output deprecated as mentioned in https://github.blog/changelog/2022-10-11-github-actions-deprecating-save-state-and-set-output-commands/
-    var githubOutputFile = Environment.GetEnvironmentVariable("GITHUB_OUTPUT", EnvironmentVariableTarget.Process);
-    if (!string.IsNullOrWhiteSpace(githubOutputFile))
+    if(result != null)
     {
-        using (var textWriter = new StreamWriter(githubOutputFile!, true, Encoding.UTF8)) 
-            textWriter.WriteLine($"json-values={dataResult}");  
-    }
-    else
-    {
-        Console.WriteLine($"::set-output name=json-values::{dataResult}"); 
+        var dataResult = JsonSerializer.Serialize(result);
+        // https://docs.github.com/actions/reference/workflow-commands-for-github-actions#setting-an-output-parameter
+        // ::set-output deprecated as mentioned in https://github.blog/changelog/2022-10-11-github-actions-deprecating-save-state-and-set-output-commands/
+        var githubOutputFile = Environment.GetEnvironmentVariable("GITHUB_OUTPUT", EnvironmentVariableTarget.Process);
+        if (!string.IsNullOrWhiteSpace(githubOutputFile))
+        {
+            using (var textWriter = new StreamWriter(githubOutputFile!, true, Encoding.UTF8))
+            {
+                textWriter.WriteLine($"json-values={dataResult}");
+                foreach (var kv in result)
+                    textWriter.WriteLine($"json-values.{kv.Key}={kv.Value}");
+            }
+
+        }
+        else
+        {
+            Console.WriteLine($"::set-output name=json-values::{dataResult}");
+            foreach (var kv in result)
+                Console.WriteLine($"::set-output name=json-values.{kv.Key}::{kv.Value}");
+        }
+
+
     }
 
     Environment.Exit(0);

@@ -1,0 +1,23 @@
+name: 'JSON properties extractor'
+description: 'Extract propeties from Json file'
+branding:
+  icon: sliders
+  color: purple
+inputs:
+  path:
+    description: 'The path of the json file.'
+    required: true
+  properties:
+    description: 'The JSON properties to extract.'
+    required: true 
+outputs:
+  json-values:
+    description: 'A dictionary'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+  - '-p'
+  - ${{ inputs.path }}
+  - '-v'
+  - ${{ inputs.properties }} 

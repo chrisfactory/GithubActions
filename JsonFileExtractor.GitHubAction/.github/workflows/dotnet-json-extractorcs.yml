@@ -1,0 +1,42 @@
+name: '.NET code metrics'
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+    - 'github-actions/JsonFileExtractor.GitHubAction/**'               # run on all changes to this dir
+    - '!github-actions/JsonFileExtractor.GitHubAction/CODE_METRICS.md' # ignore this file
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'The reason for running the workflow'
+        required: true
+        default: 'Manual run'
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    permissions:
+        contents: write
+        pull-requests: write
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: 'Print manual run reason'
+      if: ${{ github.event_name == 'workflow_dispatch' }}
+      run: |
+        echo 'Reason: ${{ github.event.inputs.reason }}'
+
+    - name: dotnet-json-extractorcs
+      id: dotnet-json-extractorcs
+      uses: JsonFileExtractor.GitHubAction@main 
+      with:
+        path: .github\workflows\parameters\example.json
+        parameters: "contentVersion;parameters.registryName"  
+      
+    - name: Show properties 
+      run: |
+         echo ${{ steps.dotnet-json-extractorcs.outputs.json-values }}
+        

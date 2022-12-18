@@ -6,12 +6,6 @@ on:
     paths:
     - 'JsonFileExtractor.GitHubAction/**'               # run on all changes to this dir
     - '!JsonFileExtractor.GitHubAction/*.md' # ignore this file
-  workflow_dispatch:
-    inputs:
-      reason:
-        description: 'The reason for running the workflow'
-        required: true
-        default: 'Manual run'
 
 jobs:
   build:
@@ -29,8 +23,8 @@ jobs:
       uses: /chrisfactory/GithubActions@master
       with:
         path: .github/workflows/parameters/example.json
-        parameters: "contentVersion;parameters.registryName"  
-      
+        parameters: 'contentVersion;parameters.registryName'
+        
     - name: Show properties 
       run: |
          echo ${{ steps.dotnet-json-extractorcs.outputs.json-values }}

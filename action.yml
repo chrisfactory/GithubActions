@@ -14,8 +14,8 @@ inputs:
     description: 'Property Alias to changed output property name. exmaple: myproperty.subproperty:myalias;autherpro:autheralias'
     required: false 
 runs:
-  using: 'docker'
-  image: 'Dockerfile'
+  using: 'docker' 
+  image: 'docker://ghcr.io/chrisfactory/githubactions:release'
   args:
   - '-p'
   - ${{ inputs.path }}

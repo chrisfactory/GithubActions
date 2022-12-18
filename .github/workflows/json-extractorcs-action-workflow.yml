@@ -15,7 +15,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag json-file-extractor-githubAction:$(date +%s)
+      run: docker build . --file Dockerfile --tag json-file-extractor-github-action:$(date +%s)
 
 
 

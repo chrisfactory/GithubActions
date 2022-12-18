@@ -27,7 +27,7 @@ jobs:
       uses: /chrisfactory/GithubActions@master
       with:
         path: .github/workflows/parameters/example.json
-        properties: 'contentVersion;parameters.registryName;;parameters.registryName.value'
+        properties: 'contentVersion;parameters.registryName;parameters.registryName.value'
          
 
     - run: echo ${{ steps.dotnet-json-extractorcs.outputs.json-values-parameters-registryName }}

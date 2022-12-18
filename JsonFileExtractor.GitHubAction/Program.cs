@@ -13,6 +13,7 @@ static async Task StartAnalysisAsync(ActionInputs inputs, IHost host)
 {
     using CancellationTokenSource tokenSource = new();
 
+
     Console.CancelKeyPress += delegate
     {
         tokenSource.Cancel();

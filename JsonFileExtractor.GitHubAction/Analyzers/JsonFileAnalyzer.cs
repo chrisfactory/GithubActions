@@ -14,12 +14,12 @@ sealed class JsonFileAnalyzer
 
     public JsonFileAnalyzer(ILogger<JsonFileAnalyzer> logger) => _logger = logger;
 
-    internal Task<IReadOnlyDictionary<string, string?>?> AnalyzeAsunc(string path, string[] properties, CancellationToken cancellation)
+    internal Task<IReadOnlyDictionary<string, string?>?> AnalyzeAsunc(string path, string properties, CancellationToken cancellation)
     {
         cancellation.ThrowIfCancellationRequested();
 
         if (File.Exists(path))
-            _logger.LogInformation($"Computing analytics on {path}.");
+            _logger.LogInformation($"File found: {path}");
         else
         {
             _logger.LogWarning($"{path} doesn't exist.");
@@ -27,7 +27,10 @@ sealed class JsonFileAnalyzer
         }
 
         var result = new Dictionary<string, string?>();
+        if(string .IsNullOrWhiteSpace(properties))
+            return Task.FromResult(default(IReadOnlyDictionary<string, string?>));
 
+        _logger.LogInformation($"Properties: {properties}");
         string jsonData = File.ReadAllText(path);
         if (jsonData != null && !string.IsNullOrEmpty(jsonData))
         {
@@ -36,7 +39,7 @@ sealed class JsonFileAnalyzer
                 var data = JsonConvert.DeserializeObject<JObject>(jsonData);
                 if (data != null)
                 {
-                    foreach (var property in properties)
+                    foreach (var property in properties.Split(';'))
                     {
                         var prop = data.SelectToken(property);
                         if (prop != null)

@@ -21,7 +21,7 @@ static async Task StartAnalysisAsync(ActionInputs inputs, IHost host)
 
     var analyser = Get<JsonFileAnalyzer>(host);
 
-    var result = await analyser.AnalyzeAsunc(inputs.JSonFilePath, inputs.Properties.Split(';'), tokenSource.Token);
+    var result = await analyser.AnalyzeAsunc(inputs.JSonFilePath, inputs.Properties, tokenSource.Token);
     var dataResult = JsonSerializer.Serialize(result);
     // https://docs.github.com/actions/reference/workflow-commands-for-github-actions#setting-an-output-parameter
     // ::set-output deprecated as mentioned in https://github.blog/changelog/2022-10-11-github-actions-deprecating-save-state-and-set-output-commands/

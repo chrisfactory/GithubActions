@@ -32,5 +32,5 @@ jobs:
     - name: Show properties 
       run: |
          echo ${{ steps.dotnet-json-extractorcs.outputs.json-values }}
-         echo ${{ steps.dotnet-json-extractorcs.outputs.json-values[contentVersion] }}
+         echo ${{ steps.dotnet-json-extractorcs.outputs.json-values['contentVersion'] }}
         

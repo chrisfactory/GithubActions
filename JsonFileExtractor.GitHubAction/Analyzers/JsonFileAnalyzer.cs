@@ -15,7 +15,7 @@ sealed class JsonFileAnalyzer
 
     public JsonFileAnalyzer(ILogger<JsonFileAnalyzer> logger) => _logger = logger;
 
-    internal Task<IReadOnlyDictionary<string, object?>?> AnalyzeAsunc(string path, string properties, string propertiesAlias, CancellationToken cancellation)
+    internal Task<IReadOnlyDictionary<string, object?>?> AnalyzeAsunc(string path, string properties, string? propertiesAlias, CancellationToken cancellation)
     {
         cancellation.ThrowIfCancellationRequested();
 

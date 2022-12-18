@@ -10,7 +10,7 @@ inputs:
   properties:
     description: 'The JSON properties to extract.'
     required: true 
-  propertiesAlias:
+  propertyAlias:
     description: 'Property Alias to changed output property name. exmaple: myproperty.subproperty:myalias;autherpro:autheralias'
     required: false 
 runs:

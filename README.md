@@ -7,7 +7,7 @@
       with:
         path: .github/workflows/parameters/example.json
         properties: 'contentVersion;parameters.registryLocation;parameters.registryName.value'
-        propertiesAlias: 'contentVersion:version;parameters.registryName.value:registryName'
+        propertyAlias: 'contentVersion:version;parameters.registryName.value:registryName'
          
 
     - run: echo ${{ steps.dotnet-json-extractorcs.outputs.parameters-registryLocation }}

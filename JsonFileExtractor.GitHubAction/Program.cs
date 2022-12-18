@@ -22,7 +22,7 @@ static async Task StartAnalysisAsync(ActionInputs inputs, IHost host)
 
     var analyser = Get<JsonFileAnalyzer>(host);
 
-    var result = await analyser.AnalyzeAsunc(inputs.JSonFilePath, inputs.Properties, inputs.PropertiesAlias, tokenSource.Token);
+    var result = await analyser.AnalyzeAsunc(inputs.JSonFilePath, inputs.Properties, inputs.PropertyAlias, tokenSource.Token);
     if(result != null)
     {
         

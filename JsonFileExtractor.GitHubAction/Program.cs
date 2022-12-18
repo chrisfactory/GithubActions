@@ -35,7 +35,7 @@ static async Task StartAnalysisAsync(ActionInputs inputs, IHost host)
             {
                 textWriter.WriteLine($"json-values={dataResult}");
                 foreach (var kv in result)
-                    textWriter.WriteLine($"json-values.{kv.Key}={kv.Value}");
+                    textWriter.WriteLine($"json-values.{kv.Key.Replace('.', '_')}={kv.Value}");
             }
 
         }
@@ -43,7 +43,7 @@ static async Task StartAnalysisAsync(ActionInputs inputs, IHost host)
         {
             Console.WriteLine($"::set-output name=json-values::{dataResult}");
             foreach (var kv in result)
-                Console.WriteLine($"::set-output name=json-values.{kv.Key}::{kv.Value}");
+                Console.WriteLine($"::set-output name=json-values.{kv.Key.Replace('.','_')}::{kv.Value}");
         }
 
 

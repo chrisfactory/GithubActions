@@ -1,4 +1,4 @@
-name: 'JSON properties extractor'
+name: 'JSON propertiy extractor'
 description: 'Extract propeties from Json file'
 branding:
   icon: sliders

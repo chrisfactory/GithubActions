@@ -29,9 +29,7 @@ jobs:
         path: .github/workflows/parameters/example.json
         properties: 'contentVersion;parameters.registryName;;parameters.registryName.value'
          
-    - run: echo ${{ steps.dotnet-json-extractorcs.outputs.json-values }}
+
     - run: echo ${{ steps.dotnet-json-extractorcs.outputs.json-values-parameters-registryName }}
-    - run: echo ${{ steps.dotnet-json-extractorcs.outputs.json-values-parameters-registryName.value }}
+    - run: echo ${{ steps.dotnet-json-extractorcs.outputs.json-values-parameters-registryName-value }}
     - run: echo ${{ steps.dotnet-json-extractorcs.outputs.json-values-contentVersion }} 
-    #- run: echo ${{ steps.dotnet-json-extractorcs.outputs.json-values["contentVersion"] }}
-    - run: echo ${{ steps.dotnet-json-extractorcs.outputs.json-values['contentVersion'] }}

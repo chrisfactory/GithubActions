@@ -1,4 +1,4 @@
-name: '.NET code metrics'
+name: 'json extractorcs'
 
 on:
   push:

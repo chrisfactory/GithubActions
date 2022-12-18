@@ -1,11 +1,11 @@
-﻿using System;
+﻿ 
+using System;
 using System.Collections.Immutable;
 using System.Reflection;
-using System.Text.Json;
-using System.Xml.Linq;
+//using System.Text.Json;
+//using System.Xml.Linq;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using JsonSerializer = System.Text.Json.JsonSerializer;
+using Newtonsoft.Json.Linq; 
 
 namespace JsonFileExtractor.GitHubAction.Analyzers;
 
@@ -37,7 +37,10 @@ sealed class JsonFileAnalyzer
         {
             try
             {
-                var data = JsonConvert.DeserializeObject<JObject>(jsonData);
+                var settings = new JsonSerializerSettings { Formatting = Formatting.None };
+                var data = JsonConvert.DeserializeObject<JObject>(jsonData, settings);
+             
+             
                 if (data != null)
                 {
                     foreach (var property in properties.Split(';'))
@@ -51,10 +54,10 @@ sealed class JsonFileAnalyzer
                                     result.Add(property, prop);
                                     break;
                                 case JTokenType.Object:
-                                    result.Add(property, prop.ToObject<object>());
+                                    result.Add(property, JsonConvert.SerializeObject(prop.ToObject<object>(), Formatting.None));
                                     break;
                                 case JTokenType.Array:
-                                    result.Add(property, prop.ToObject<Array>());
+                                    result.Add(property, JsonConvert.SerializeObject(prop.ToObject<Array>(), Formatting.None));
                                     break;
                                 case JTokenType.Integer:
                                     result.Add(property, prop.ToObject<int>());

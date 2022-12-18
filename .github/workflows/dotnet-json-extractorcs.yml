@@ -23,7 +23,7 @@ jobs:
       uses: /chrisfactory/GithubActions@master
       with:
         path: .github/workflows/parameters/example.json
-        parameters: 'contentVersion;parameters.registryName'
+        properties: 'contentVersion;parameters.registryName'
         
     - name: Show properties 
       run: |

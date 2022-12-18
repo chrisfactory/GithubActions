@@ -2,8 +2,7 @@ name: 'json extractorcs'
 
 on:
   push:
-    branches:
-      - master
+    branches: [ master ]
 
 
     paths:

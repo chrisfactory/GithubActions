@@ -25,25 +25,23 @@ static async Task StartAnalysisAsync(ActionInputs inputs, IHost host)
     var result = await analyser.AnalyzeAsunc(inputs.JSonFilePath, inputs.Properties, tokenSource.Token);
     if(result != null)
     {
-        var dataResult = JsonSerializer.Serialize(result);
+        
         // https://docs.github.com/actions/reference/workflow-commands-for-github-actions#setting-an-output-parameter
         // ::set-output deprecated as mentioned in https://github.blog/changelog/2022-10-11-github-actions-deprecating-save-state-and-set-output-commands/
         var githubOutputFile = Environment.GetEnvironmentVariable("GITHUB_OUTPUT", EnvironmentVariableTarget.Process);
         if (!string.IsNullOrWhiteSpace(githubOutputFile))
         {
             using (var textWriter = new StreamWriter(githubOutputFile!, true, Encoding.UTF8))
-            {
-                textWriter.WriteLine($"json-values={dataResult}");
+            { 
                 foreach (var kv in result)
-                    textWriter.WriteLine($"json-values.{kv.Key.Replace('.', '_')}={kv.Value}");
+                    textWriter.WriteLine($"json-values.{kv.Key}={kv.Value}");
             }
 
         }
         else
-        {
-            Console.WriteLine($"::set-output name=json-values::{dataResult}");
+        { 
             foreach (var kv in result)
-                Console.WriteLine($"::set-output name=json-values.{kv.Key.Replace('.','_')}::{kv.Value}");
+                Console.WriteLine($"::set-output name=json-values.{kv.Key}::{kv.Value}");
         }
 
 

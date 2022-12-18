@@ -5,6 +5,7 @@ using System.Text.Json;
 using System.Xml.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace JsonFileExtractor.GitHubAction.Analyzers;
 
@@ -14,7 +15,7 @@ sealed class JsonFileAnalyzer
 
     public JsonFileAnalyzer(ILogger<JsonFileAnalyzer> logger) => _logger = logger;
 
-    internal Task<IReadOnlyDictionary<string, string?>?> AnalyzeAsunc(string path, string properties, CancellationToken cancellation)
+    internal Task<IReadOnlyDictionary<string, object?>?> AnalyzeAsunc(string path, string properties, CancellationToken cancellation)
     {
         cancellation.ThrowIfCancellationRequested();
 
@@ -23,12 +24,12 @@ sealed class JsonFileAnalyzer
         else
         {
             _logger.LogWarning($"{path} doesn't exist.");
-            return Task.FromResult(default(IReadOnlyDictionary<string, string?>));
+            return Task.FromResult(default(IReadOnlyDictionary<string, object?>));
         }
 
-        var result = new Dictionary<string, string?>();
+        var result = new Dictionary<string, object?>();
         if(string .IsNullOrWhiteSpace(properties))
-            return Task.FromResult(default(IReadOnlyDictionary<string, string?>));
+            return Task.FromResult(default(IReadOnlyDictionary<string, object?>));
 
         _logger.LogInformation($"Properties: {properties}");
         string jsonData = File.ReadAllText(path);
@@ -44,7 +45,60 @@ sealed class JsonFileAnalyzer
                         var prop = data.SelectToken(property);
                         if (prop != null)
                         {
-                            result.Add(property, prop.ToString());
+                            switch (prop.Type)
+                            {
+                                case JTokenType.None:
+                                    result.Add(property, prop);
+                                    break;
+                                case JTokenType.Object:
+                                    result.Add(property, prop.ToObject<object>());
+                                    break;
+                                case JTokenType.Array:
+                                    result.Add(property, prop.ToObject<Array>());
+                                    break;
+                                case JTokenType.Integer:
+                                    result.Add(property, prop.ToObject<int>());
+                                    break;
+                                case JTokenType.Float:
+                                    result.Add(property, prop.ToObject<float>());
+                                    break;
+                                case JTokenType.String: 
+                                    result.Add(property, prop.ToObject<string>());
+                                    break;
+                                case JTokenType.Boolean:
+                                    result.Add(property, prop.ToObject<bool>());
+                                    break;
+                                case JTokenType.Null:
+                                    result.Add(property, null);
+                                    break; 
+                                case JTokenType.Date:
+                                    result.Add(property, prop.ToObject<DateTime>());
+                                    break;
+                                case JTokenType.Raw:
+                                    result.Add(property, prop);
+                                    break;
+                                case JTokenType.Bytes:
+                                    result.Add(property, prop.ToObject<byte[]>());
+                                    break;
+                                case JTokenType.Guid:
+                                    result.Add(property, prop.ToObject<Guid>());
+                                    break;
+                                case JTokenType.Uri:
+                                    result.Add(property, prop.ToObject<Uri>());
+                                    break;
+                                case JTokenType.TimeSpan:
+                                    result.Add(property, prop.ToObject<TimeSpan>());
+                                    break;
+
+                                case JTokenType.Undefined:
+                                case JTokenType.Constructor:
+                                case JTokenType.Property:
+                                case JTokenType.Comment:
+                                default:
+                                    throw new InvalidOperationException(prop.Type.ToString());
+                                  
+                            }
+                            
                         }
                         else
                         {
@@ -57,7 +111,7 @@ sealed class JsonFileAnalyzer
                 else
                 {
                     _logger.LogWarning($"{path} the file is empty");
-                    return Task.FromResult(default(IReadOnlyDictionary<string, string?>));
+                    return Task.FromResult(default(IReadOnlyDictionary<string, object?>));
                 }
             }
             catch (Exception ex)
@@ -71,6 +125,6 @@ sealed class JsonFileAnalyzer
             _logger.LogWarning($"{path} the file is empty");
         }
 
-        return Task.FromResult((IReadOnlyDictionary<string, string?>?)result);
+        return Task.FromResult((IReadOnlyDictionary<string, object?>?)result);
     }
 }

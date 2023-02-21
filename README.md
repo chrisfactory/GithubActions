@@ -1,4 +1,6 @@
-# GithubActions For extract json properties from file example:
+# GithubActions For extract json properties from file.
+
+example:
 
 
     - name: dotnet-json-extractorcs
